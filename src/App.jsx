@@ -9,6 +9,7 @@ export default function App() {
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPayment, setShowPayment] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
 
   function addToCart(dish) {
     const existing = cart.find((item) => item.id === dish.id);
@@ -38,9 +39,25 @@ export default function App() {
             Delivery in {deliveryInfo.etaMin}–{deliveryInfo.etaMax} min
           </span>
         </div>
-        <div className="cart-badge-wrapper">
-          <span className="cart-icon">🛒</span>
-          {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+        <div className="header-right">
+          <div className="cart-badge-wrapper">
+            <span className="cart-icon">🛒</span>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </div>
+
+          <div className="account-menu">
+            <button className="account-btn" onClick={() => setShowAccount(!showAccount)}>
+              👤 My Account
+            </button>
+            {showAccount && (
+              <div className="account-dropdown">
+                <button className="account-dropdown-item" onClick={() => setShowAccount(false)}>Profile</button>
+                <button className="account-dropdown-item" onClick={() => setShowAccount(false)}>My Orders</button>
+                <hr className="account-dropdown-divider" />
+                <button className="account-dropdown-item account-dropdown-item--signout" onClick={() => setShowAccount(false)}>Sign Out</button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
