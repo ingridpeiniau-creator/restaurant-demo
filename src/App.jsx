@@ -23,8 +23,26 @@ export default function App() {
     setCart(cart.filter((item) => item.id !== id));
   }
 
-  // BUG #6: cart.length counts duplicate entries, not unique items with quantities
-  const cartCount = cart.length;
+  function incrementQty(id) {
+    setCart(
+      cart.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  }
+
+  function decrementQty(id) {
+    // decrease by one, and drop the line entirely if it reaches zero
+    setCart(
+      cart
+        .map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  }
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="app">
@@ -51,7 +69,13 @@ export default function App() {
           onCategoryChange={setSelectedCategory}
           onAddToCart={addToCart}
         />
-        <Cart cart={cart} onRemove={removeFromCart} onCheckout={() => setShowPayment(true)} />
+        <Cart
+          cart={cart}
+          onRemove={removeFromCart}
+          onIncrement={incrementQty}
+          onDecrement={decrementQty}
+          onCheckout={() => setShowPayment(true)}
+        />
       </main>
       {showPayment && (
         <PaymentModal

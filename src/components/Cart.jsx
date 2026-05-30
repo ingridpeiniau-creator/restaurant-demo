@@ -39,7 +39,34 @@ export default function Cart({ cart, onRemove, onCheckout }) {
               <span className="cart-item-emoji">{item.emoji}</span>
               <div className="cart-item-details">
                 <span className="cart-item-name">{item.name}</span>
-                <span className="cart-item-qty">x{item.quantity}</span>
+                <span className="cart-item-price">€{(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+              <div className="qty-stepper">
+                {item.quantity === 1 ? (
+                  <button
+                    className="qty-btn qty-btn-remove"
+                    aria-label={`Remove ${item.name}`}
+                    onClick={() => onRemove(item.id)}
+                  >
+                    🗑
+                  </button>
+                ) : (
+                  <button
+                    className="qty-btn"
+                    aria-label={`Decrease ${item.name}`}
+                    onClick={() => onDecrement(item.id)}
+                  >
+                    −
+                  </button>
+                )}
+                <span className="qty-value">{item.quantity}</span>
+                <button
+                  className="qty-btn"
+                  aria-label={`Increase ${item.name}`}
+                  onClick={() => onIncrement(item.id)}
+                >
+                  +
+                </button>
               </div>
               <span className="cart-item-price">€{(item.price * item.quantity).toFixed(2)}</span>
               <button className="remove-btn" onClick={() => onRemove(item.id)}>✕</button>
