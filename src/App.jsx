@@ -18,7 +18,7 @@ export default function App() {
     setCart(cart.filter((item) => item.id === id));
   }
 
-  const cartCount = cart.length;
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="app">
