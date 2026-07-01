@@ -1,8 +1,7 @@
-export default function Cart({ cart, onRemove, onCheckout }) {
-  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+import { calculateTotals } from "../utils/pricing";
 
-  const tax = subtotal * 0.20;
-  const total = subtotal + tax;
+export default function Cart({ cart, onRemove, onCheckout }) {
+  const { subtotal, tax, total } = calculateTotals(cart);
 
   return (
     <aside className="cart">
