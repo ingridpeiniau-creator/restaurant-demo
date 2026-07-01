@@ -533,6 +533,15 @@ body {
 }
 
 /* Card form */
+.form-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6b7c71;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 16px 0 10px;
+}
+
 .card-form {
   display: flex;
   flex-direction: column;
@@ -626,4 +635,17 @@ body {
   font-size: 0.8rem;
   color: #9aaba0;
   margin-bottom: 8px;
+}
+
+.success-delivery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.success-delivery-address {
+  font-size: 0.8rem;
+  color: #6b7c71;
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { deliveryInfo } from "../data";
 
 function generateOrderNumber() {
   return "DL-" + Math.floor(10000 + Math.random() * 90000);
@@ -12,7 +13,15 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
   const [step, setStep] = useState("summary");
   const [orderNumber] = useState(generateOrderNumber);
   const [orderTime] = useState(() => new Date());
-  const [form, setForm] = useState({ name: "", number: "", expiry: "", cvv: "" });
+  const [form, setForm] = useState({
+    name: "",
+    number: "",
+    expiry: "",
+    cvv: "",
+    street: "",
+    city: "",
+    postalCode: "",
+  });
 
   useEffect(() => {
     if (step !== "processing") return;
@@ -40,7 +49,10 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
     form.name.trim() &&
     form.number.replace(/\s/g, "").length === 16 &&
     form.expiry.length === 5 &&
-    form.cvv.length >= 3;
+    form.cvv.length >= 3 &&
+    form.street.trim() &&
+    form.city.trim() &&
+    form.postalCode.trim();
 
   const formattedTime = orderTime.toLocaleString("en-GB", {
     day: "numeric",
@@ -89,7 +101,43 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
 
         {step === "card" && (
           <div className="modal-step">
-            <h2 className="modal-title">Payment Details</h2>
+            <h2 className="modal-title">Delivery &amp; Payment</h2>
+            <h3 className="form-section-title">Delivery address</h3>
+            <div className="card-form">
+              <label className="card-label">
+                Street address
+                <input
+                  className="card-input"
+                  type="text"
+                  placeholder="123 Main St"
+                  value={form.street}
+                  onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))}
+                />
+              </label>
+              <div className="card-row">
+                <label className="card-label">
+                  City
+                  <input
+                    className="card-input"
+                    type="text"
+                    placeholder="London"
+                    value={form.city}
+                    onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+                  />
+                </label>
+                <label className="card-label">
+                  Postal code
+                  <input
+                    className="card-input"
+                    type="text"
+                    placeholder="SW1A 1AA"
+                    value={form.postalCode}
+                    onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
+                  />
+                </label>
+              </div>
+            </div>
+            <h3 className="form-section-title">Payment details</h3>
             <div className="card-form">
               <label className="card-label">
                 Name on card
@@ -164,6 +212,16 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
             <div className="success-icon">✓</div>
             <h2 className="success-title">Payment Successful!</h2>
             <p className="success-meta">Order {orderNumber} · {formattedTime}</p>
+            <div className="success-delivery">
+              <span className="delivery-eta">
+                <span className="eta-dot" />
+                <span className="eta-icon">🛵</span>
+                Delivery in {deliveryInfo.etaMin}–{deliveryInfo.etaMax} min
+              </span>
+              <p className="success-delivery-address">
+                Delivering to {form.street}, {form.postalCode} {form.city}
+              </p>
+            </div>
             <ul className="modal-item-list modal-item-list--receipt">
               {cart.map((item, i) => (
                 <li key={i} className="modal-item-row">
