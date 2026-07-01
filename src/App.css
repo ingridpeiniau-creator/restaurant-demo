@@ -204,6 +204,12 @@ body {
   color: #1a271f;
 }
 
+.dish-tax {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9aaba0;
+}
+
 .add-btn {
   padding: 7px 16px;
   background: #00c1b2;
@@ -297,6 +303,12 @@ body {
   font-weight: 700;
   color: #1a271f;
   flex-shrink: 0;
+}
+
+.cart-item-tax {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #9aaba0;
 }
 
 .remove-btn {

@@ -1,3 +1,5 @@
+import { TAX_RATE } from "../data";
+
 const CATEGORIES = ["All", "Starters", "Mains", "Desserts"];
 
 export default function Menu({ dishes, selectedCategory, onCategoryChange, onAddToCart }) {
@@ -27,7 +29,10 @@ export default function Menu({ dishes, selectedCategory, onCategoryChange, onAdd
               <h3>{dish.name}</h3>
               <p>{dish.description}</p>
               <div className="dish-footer">
-                <span className="dish-price">€{dish.price.toFixed(2)}</span>
+                <span className="dish-price">
+                  €{dish.price.toFixed(2)}
+                  <span className="dish-tax"> (+€{(dish.price * TAX_RATE).toFixed(2)} tax)</span>
+                </span>
                 <button className="add-btn" onClick={() => onAddToCart(dish)}>
                   Add to cart
                 </button>
