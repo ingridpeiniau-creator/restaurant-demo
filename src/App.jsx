@@ -3,19 +3,38 @@ import { dishes, deliveryInfo } from "./data";
 import Menu from "./components/Menu";
 import Cart from "./components/Cart";
 import PaymentModal from "./components/PaymentModal";
+import { useSplitBill } from "./hooks/useSplitBill";
 import "./App.css";
 
 export default function App() {
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPayment, setShowPayment] = useState(false);
+  const splitBill = useSplitBill();
 
   function addToCart(dish) {
-    setCart((prev) => [...prev, { ...dish, quantity: 1 }]);
+    setCart((prev) => [...prev, { ...dish, quantity: 1, lineId: crypto.randomUUID() }]);
   }
 
-  function removeFromCart(id) {
-    setCart(cart.filter((item) => item.id !== id));
+  function removeFromCart(lineId) {
+    setCart(cart.filter((item) => item.lineId !== lineId));
+    splitBill.actions.removeLine(lineId);
+  }
+
+  function openPayment() {
+    splitBill.actions.freeze();
+    setShowPayment(true);
+  }
+
+  function closePayment() {
+    splitBill.actions.unfreeze();
+    setShowPayment(false);
+  }
+
+  function handlePaymentSuccess() {
+    setCart([]);
+    splitBill.actions.reset();
+    setShowPayment(false);
   }
 
   const cartCount = cart.length;
@@ -45,13 +64,19 @@ export default function App() {
           onCategoryChange={setSelectedCategory}
           onAddToCart={addToCart}
         />
-        <Cart cart={cart} onRemove={removeFromCart} onCheckout={() => setShowPayment(true)} />
+        <Cart
+          cart={cart}
+          onRemove={removeFromCart}
+          onCheckout={openPayment}
+          splitBill={splitBill}
+        />
       </main>
       {showPayment && (
         <PaymentModal
           cart={cart}
-          onClose={() => setShowPayment(false)}
-          onSuccess={() => { setCart([]); setShowPayment(false); }}
+          splitBill={splitBill}
+          onClose={closePayment}
+          onSuccess={handlePaymentSuccess}
         />
       )}
     </div>
