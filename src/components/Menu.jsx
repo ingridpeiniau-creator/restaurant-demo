@@ -1,3 +1,6 @@
+// French VAT rate for restaurant food (10%)
+const VAT_RATE = 0.10;
+
 const CATEGORIES = ["All", "Starters", "Mains", "Desserts"];
 
 export default function Menu({ dishes, selectedCategory, onCategoryChange, onAddToCart }) {
@@ -27,7 +30,7 @@ export default function Menu({ dishes, selectedCategory, onCategoryChange, onAdd
               <h3>{dish.name}</h3>
               <p>{dish.description}</p>
               <div className="dish-footer">
-                <span className="dish-price">€{dish.price.toFixed(2)}</span>
+                <span className="dish-price">€{(dish.price * (1 + VAT_RATE)).toFixed(2)}</span>
                 <button className="add-btn" onClick={() => onAddToCart(dish)}>
                   Add to cart
                 </button>
