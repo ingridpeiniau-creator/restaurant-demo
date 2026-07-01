@@ -1,18 +1,32 @@
 import { useState, useEffect } from "react";
+import { computeCartTotals, computeOrderSummary } from "../utils/splitBill";
+import { personName } from "../utils/people";
+import PersonBreakdownTable from "./PersonBreakdownTable";
+import PayerSelector from "./PayerSelector";
 
 function generateOrderNumber() {
   return "DL-" + Math.floor(10000 + Math.random() * 90000);
 }
 
-export default function PaymentModal({ cart, onClose, onSuccess }) {
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const tax = subtotal * 0.2;
-  const total = subtotal + tax;
+function shareCodeFor(orderNumber, guestId) {
+  return `${orderNumber}-${guestId.slice(-4).toUpperCase()}`;
+}
+
+export default function PaymentModal({ cart, splitBill, onClose, onSuccess }) {
+  const { subtotal, tax, total } = computeCartTotals(cart);
+  const { state, actions } = splitBill;
 
   const [step, setStep] = useState("summary");
   const [orderNumber] = useState(generateOrderNumber);
   const [orderTime] = useState(() => new Date());
   const [form, setForm] = useState({ name: "", number: "", expiry: "", cvv: "" });
+
+  useEffect(() => {
+    if (state.isActive && state.paymentMode === null) {
+      actions.setPaymentMode("singlePayer");
+      actions.setPayer("me");
+    }
+  }, [state.isActive, state.paymentMode, actions]);
 
   useEffect(() => {
     if (step !== "processing") return;
@@ -50,6 +64,9 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
     minute: "2-digit",
   });
 
+  const summary = state.isActive ? computeOrderSummary(cart, state.guests, state.assignments) : null;
+  const payerName = state.isActive ? personName(state.payer ?? "me", state.guests) : null;
+
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -58,8 +75,8 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
           <div className="modal-step">
             <h2 className="modal-title">Order Summary</h2>
             <ul className="modal-item-list">
-              {cart.map((item, i) => (
-                <li key={i} className="modal-item-row">
+              {cart.map((item) => (
+                <li key={item.lineId} className="modal-item-row">
                   <span className="modal-item-emoji">{item.emoji}</span>
                   <span className="modal-item-name">{item.name}</span>
                   <span className="modal-item-qty">x{item.quantity}</span>
@@ -78,6 +95,26 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
                 <span>Total</span><span>€{total.toFixed(2)}</span>
               </div>
             </div>
+
+            {summary && (
+              <div className="split-payment-section">
+                <h3 className="split-payment-subtitle">Récapitulatif par personne</h3>
+                <PersonBreakdownTable
+                  perPerson={summary.perPerson}
+                  guests={state.guests}
+                  cartLines={cart}
+                  assignments={state.assignments}
+                />
+                <PayerSelector
+                  guests={state.guests}
+                  paymentMode={state.paymentMode}
+                  payer={state.payer}
+                  onSetMode={actions.setPaymentMode}
+                  onSetPayer={actions.setPayer}
+                />
+              </div>
+            )}
+
             <div className="modal-actions">
               <button className="modal-btn-secondary" onClick={onClose}>Cancel</button>
               <button className="modal-btn-primary" onClick={() => setStep("card")}>
@@ -164,9 +201,12 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
             <div className="success-icon">✓</div>
             <h2 className="success-title">Payment Successful!</h2>
             <p className="success-meta">Order {orderNumber} · {formattedTime}</p>
+            {summary && (
+              <p className="success-meta">Payé par {payerName}</p>
+            )}
             <ul className="modal-item-list modal-item-list--receipt">
-              {cart.map((item, i) => (
-                <li key={i} className="modal-item-row">
+              {cart.map((item) => (
+                <li key={item.lineId} className="modal-item-row">
                   <span className="modal-item-emoji">{item.emoji}</span>
                   <span className="modal-item-name">{item.name}</span>
                   <span className="modal-item-qty">x{item.quantity}</span>
@@ -179,6 +219,24 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
                 <span>Total paid</span><span>€{total.toFixed(2)}</span>
               </div>
             </div>
+
+            {summary && state.guests.length > 0 && (
+              <div className="split-share-codes">
+                <h3 className="split-payment-subtitle">Part de chaque invité</h3>
+                <ul className="share-code-list">
+                  {state.guests.map((guest) => {
+                    const person = summary.perPerson.find((p) => p.id === guest.id);
+                    return (
+                      <li key={guest.id} className="share-code-row">
+                        <span>{guest.name} — €{person.total.toFixed(2)}</span>
+                        <code>{shareCodeFor(orderNumber, guest.id)}</code>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
             <button className="modal-btn-primary modal-btn-full" onClick={onSuccess}>
               Start New Order
             </button>

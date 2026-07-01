@@ -627,3 +627,268 @@ body {
   color: #9aaba0;
   margin-bottom: 8px;
 }
+
+/* ─── Split the Bill ─────────────────────────────────── */
+.cart-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.split-toggle-btn {
+  padding: 6px 12px;
+  background: #e6faf8;
+  color: #008f84;
+  border: 1px solid #b8ebe5;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.split-toggle-active {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.split-toggle-manage-btn {
+  padding: 6px 12px;
+  background: #00c1b2;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.split-toggle-manage-btn:disabled {
+  background: #d8d4cf;
+  cursor: not-allowed;
+}
+
+.split-toggle-disable-btn {
+  background: none;
+  border: none;
+  color: #c8c4bf;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.split-toggle-disable-btn:hover {
+  color: #e03030;
+}
+
+.person-summary-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f8f4ef;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1a271f;
+}
+
+.person-summary-chip {
+  background: white;
+  border: 1px solid #ede9e4;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.assign-to-select {
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border: 1.5px solid #d8d4cf;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #1a271f;
+  max-width: 90px;
+}
+
+/* Guest list modal */
+.guest-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.guest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guest-name-input {
+  flex: 1;
+  padding: 8px 12px;
+}
+
+.guest-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.guest-add-row .card-input {
+  flex: 1;
+  padding: 8px 12px;
+}
+
+.guest-limit-hint {
+  font-size: 0.75rem;
+  color: #9aaba0;
+  margin-bottom: 20px;
+}
+
+/* Share modal */
+.share-row-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-row-name {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a271f;
+}
+
+.share-shares-input {
+  width: 60px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.share-row-amount {
+  width: 70px;
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1a271f;
+}
+
+.share-per-share-hint {
+  font-size: 0.8rem;
+  color: #6b7c71;
+  margin-bottom: 20px;
+}
+
+/* Payment modal split sections */
+.split-payment-section,
+.split-share-codes {
+  border-top: 1px solid #ede9e4;
+  padding-top: 14px;
+  margin-bottom: 20px;
+}
+
+.split-payment-subtitle {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1a271f;
+  margin-bottom: 12px;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-bottom: 16px;
+}
+
+.breakdown-table th {
+  text-align: left;
+  color: #9aaba0;
+  font-weight: 700;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ede9e4;
+}
+
+.breakdown-table td {
+  padding: 6px 4px;
+  border-bottom: 1px solid #f2efea;
+  color: #1a271f;
+}
+
+.payer-selector-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6b7c71;
+  margin-bottom: 8px;
+}
+
+.payer-mode-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.payer-mode-btn {
+  padding: 8px 14px;
+  border: 1.5px solid #d8d4cf;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.payer-mode-btn.active {
+  background: #00c1b2;
+  color: white;
+  border-color: #00c1b2;
+}
+
+.payer-mode-btn--disabled {
+  color: #a8a4a0;
+  cursor: not-allowed;
+}
+
+.payer-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #d8d4cf;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #1a271f;
+}
+
+.share-code-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.share-code-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  background: #f8f4ef;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.share-code-row code {
+  font-size: 0.75rem;
+  color: #008f84;
+  font-weight: 700;
+}
