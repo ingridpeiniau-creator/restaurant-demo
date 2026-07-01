@@ -36,10 +36,22 @@ export default function PaymentModal({ cart, onClose, onSuccess }) {
     setForm((f) => ({ ...f, expiry: formatted }));
   }
 
+  function isExpiryValid(expiry) {
+    const match = /^(\d{2})\/(\d{2})$/.exec(expiry);
+    if (!match) return false;
+    const month = Number(match[1]);
+    const year = 2000 + Number(match[2]);
+    if (month < 1 || month > 12) return false;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    return year > currentYear || (year === currentYear && month >= currentMonth);
+  }
+
   const canPay =
     /^[A-Za-z'-]+(\s+[A-Za-z'-]+)+$/.test(form.name.trim()) &&
     form.number.replace(/\s/g, "").length === 16 &&
-    form.expiry.length === 5 &&
+    isExpiryValid(form.expiry) &&
     form.cvv.length === 3;
 
   const formattedTime = orderTime.toLocaleString("en-GB", {
