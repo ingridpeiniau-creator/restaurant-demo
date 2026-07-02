@@ -17,19 +17,27 @@ export default function AddGuestsModal({ guests, canAddGuest, onAddGuest, onRemo
     }
   }
 
+  function handleRenameBlur(guest, index) {
+    // Names can be cleared while editing; on blur, fall back to a placeholder
+    // so a guest is never left nameless. Also drops stray leading/trailing spaces.
+    const trimmed = guest.name.trim();
+    onRenameGuest(guest.id, trimmed || `Invité ${index + 1}`);
+  }
+
   return (
     <div className="modal-overlay" onClick={onCancel}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal-title">Qui partage ce repas ?</h2>
 
         <ul className="guest-list">
-          {guests.map((guest) => (
+          {guests.map((guest, index) => (
             <li key={guest.id} className="guest-row">
               <input
                 className="card-input guest-name-input"
                 type="text"
                 value={guest.name}
                 onChange={(e) => onRenameGuest(guest.id, e.target.value)}
+                onBlur={() => handleRenameBlur(guest, index)}
               />
               <button className="remove-btn" onClick={() => onRemoveGuest(guest.id)}>✕</button>
             </li>
