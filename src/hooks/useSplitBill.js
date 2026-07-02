@@ -47,11 +47,14 @@ function reducer(state, action) {
 
     case "RENAME_GUEST": {
       if (state.isFrozen) return state;
-      const name = action.name.trim();
-      if (!name) return state;
+      // Store the raw value so a controlled input can be cleared or hold spaces
+      // mid-edit (e.g. typing a two-word name). Trimming/empty-guarding happens
+      // at add time, not on every keystroke.
       return {
         ...state,
-        guests: state.guests.map((g) => (g.id === action.guestId ? { ...g, name } : g)),
+        guests: state.guests.map((g) =>
+          g.id === action.guestId ? { ...g, name: action.name } : g
+        ),
       };
     }
 
